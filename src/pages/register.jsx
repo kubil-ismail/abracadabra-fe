@@ -1,10 +1,10 @@
 import Seo from "@/components/globals/Seo";
 import Applayout from "@/components/_pages/Register";
 
-export default function Home() {
+export default function Register() {
   return (
     <>
-      <Seo title="Home" url="" />
+      <Seo title="Register" url="" />
       <main>
         <Applayout />
       </main>

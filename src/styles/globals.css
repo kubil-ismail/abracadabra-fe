@@ -83,3 +83,9 @@ main {
   color: white !important;
   background-color: #3b5998 !important;
 }
+
+.profile {
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50% !important;
+}

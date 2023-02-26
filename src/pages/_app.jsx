@@ -4,15 +4,18 @@ import "@fontsource/inter";
 import "@/styles/globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 // Globals
+import React from "react";
 import AOS from "aos";
 import App from "next/app";
 import Head from "next/head";
+import http from "@/utils/http";
 import Router from "next/router";
 import NProgress from "nprogress";
 import PropTypes from "prop-types";
 // Redux
-import { Provider } from "react-redux";
-import store from "@/stores";
+import { Provider, useSelector } from "react-redux";
+import { store, persistor } from "@/stores";
+import { PersistGate } from "redux-persist/integration/react";
 
 //!Proggress bar page transition with NProgress
 NProgress.configure({ showSpinner: false });
@@ -32,19 +35,43 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
-
     return (
       <>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
         </Head>
         <Provider store={store}>
-          <Component {...pageProps} />
+          <PersistGate loading={null} persistor={persistor}>
+            <AppMain {...this.props} />
+          </PersistGate>
         </Provider>
       </>
     );
   }
+}
+
+function AppMain(props) {
+  const { Component, pageProps } = props;
+  const {
+    token: { login, otp },
+  } = useSelector((state) => state.auth);
+
+  const token = login || otp;
+
+  React.useEffect(() => {
+    if (token) {
+      http.defaults.headers.common.Authorization = `Bearer ${token}`;
+    }
+
+    http.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => Promise.reject(error)
+    );
+  }, [token]);
+
+  return <Component {...pageProps} />;
 }
 
 MyApp.propTypes = {
