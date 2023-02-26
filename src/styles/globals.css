@@ -26,7 +26,7 @@ a {
 }
 
 #nprogress .bar {
-  background: linear-gradient(90deg, #001372 0%, #5DB6D7 100%);
+  background: linear-gradient(90deg, #001372 0%, #5db6d7 100%);
 
   position: fixed;
   z-index: 1031;
@@ -44,7 +44,7 @@ a {
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px #5DB6D7, 0 0 5px #5DB6D7;
+  box-shadow: 0 0 10px #5db6d7, 0 0 5px #5db6d7;
   opacity: 1;
 
   -webkit-transform: rotate(3deg) translate(0px, -4px);
@@ -55,4 +55,31 @@ a {
 .nprogress-custom-parent {
   overflow: hidden;
   position: relative;
+}
+
+body {
+  background: #007bff;
+  background: linear-gradient(to right, #0062e6, #33aeff);
+}
+
+main {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.btn-login {
+  font-size: 0.9rem;
+  letter-spacing: 0.05rem;
+  padding: 0.75rem 1rem;
+}
+
+.btn-google {
+  color: white !important;
+  background-color: #ea4335 !important;
+}
+
+.btn-facebook {
+  color: white !important;
+  background-color: #3b5998 !important;
 }

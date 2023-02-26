@@ -11,3 +11,7 @@ export default function Home() {
     </>
   );
 }
+
+// Page Config
+// Home.disabledLayout = true;
+

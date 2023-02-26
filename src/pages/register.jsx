@@ -1,5 +1,5 @@
 import Seo from "@/components/globals/Seo";
-import Applayout from "@/components/_pages/Login";
+import Applayout from "@/components/_pages/Register";
 
 export default function Home() {
   return (
@@ -11,3 +11,7 @@ export default function Home() {
     </>
   );
 }
+
+// Page Config
+// Home.disabledLayout = true;
+
