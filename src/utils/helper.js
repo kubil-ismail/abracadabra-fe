@@ -57,6 +57,34 @@ export const validationSchemaRegister = yup.object({
   ),
 });
 
+export const validationSchemaLogin = yup.object({
+  email: yup
+    .string("Enter your email/phone number")
+    .test(
+      "check",
+      (e) => {
+        if (parseInt(e.originalValue)) {
+          return "Phone number is not valid";
+        } else {
+          return "Email address is not valid";
+        }
+      },
+      (value) => {
+        let isValidEmail = emailRegex.test(value);
+        let isValidPhone = phoneRegex.test(value);
+
+        if (!isValidEmail && !isValidPhone) {
+          return false;
+        }
+        return true;
+      }
+    )
+    .required("This field cannot empty"),
+  password: yup
+    .string("Enter your password")
+    .required("This field cannot empty"),
+});
+
 export const validationSchemaOtp = yup.object({
   value: yup
     .number()

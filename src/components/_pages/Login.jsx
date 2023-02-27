@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, facebookProvider } from "@/firebase";
 import * as authReducer from "@/stores/reducers/auth";
+import * as helper from '@/utils/helper'
 
 function Login() {
   const router = useRouter();
@@ -19,7 +20,7 @@ function Login() {
       email: "",
       password: "",
     },
-    validationSchema: null,
+    validationSchema: helper.validationSchemaLogin,
     onSubmit: (values) => {
       dispatch(authReducer.setLoading(true));
 
@@ -145,8 +146,15 @@ function Login() {
                     name="email"
                     onChange={formik.handleChange}
                   />
-                  <label for="floatingInput">Phone number or email address</label>
+                  <label for="floatingInput">
+                    Phone number or Email address
+                  </label>
                 </div>
+                {formik.touched.email && Boolean(formik.errors.email) && (
+                  <small class="d-grid mb-3 text-danger">
+                    {formik.errors.email}
+                  </small>
+                )}
                 <div class="form-floating mb-3">
                   <input
                     type="password"
@@ -159,6 +167,11 @@ function Login() {
                   />
                   <label for="floatingPassword">Password</label>
                 </div>
+                {formik.touched.password && Boolean(formik.errors.password) && (
+                  <small class="d-grid mb-3 text-danger">
+                    {formik.errors.password}
+                  </small>
+                )}
 
                 <div class="d-grid">
                   <button
