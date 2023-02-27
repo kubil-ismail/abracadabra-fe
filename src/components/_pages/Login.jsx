@@ -5,8 +5,9 @@ import http from "@/utils/http";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider, facebookProvider } from "@/firebase";
 import * as authReducer from "@/stores/reducers/auth";
-import * as helper from "@/utils/helper";
 
 function Login() {
   const router = useRouter();
@@ -23,29 +24,86 @@ function Login() {
       dispatch(authReducer.setLoading(true));
 
       if (!isLoading) {
-        http
-          .post("/auth/login", {
-            identity: values.email,
-            password: values.password,
-          })
-          .then((response) => {
-            dispatch(authReducer.login(response?.data?.data));
-            router.replace("/profile");
-          })
-          .catch((error) => {
-            console.log(error)
-            const response = error?.response;
-            dispatch(
-              authReducer.setError({
-                status: response?.status,
-                message: response?.data?.errors ?? "Email or password invalid",
-              })
-            );
-          })
-          .finally(() => dispatch(authReducer.setLoading(false)));
+        handleLogin(values);
       }
     },
   });
+
+  const handleLogin = (values) => {
+    http
+      .post("/auth/login", {
+        identity: values.email,
+        password: values.password,
+      })
+      .then((response) => {
+        dispatch(authReducer.login(response?.data?.data));
+        router.replace("/profile");
+      })
+      .catch((error) => {
+        const response = error?.response;
+        dispatch(
+          authReducer.setError({
+            status: response?.status,
+            message: response?.data?.errors ?? "Email or password invalid",
+          })
+        );
+      })
+      .finally(() => dispatch(authReducer.setLoading(false)));
+  };
+
+  const loginWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((response) => {
+        dispatch(authReducer.setLoading(true));
+        dispatch(
+          authReducer.setProvider({
+            type: "google",
+            data: response.user,
+          })
+        );
+
+        handleLogin({
+          email: response.user.email,
+          password: response.user.uid,
+        });
+      })
+      .catch((error) => {
+         dispatch(
+           authReducer.setError({
+             status: true,
+             message: "Cannot register with this email",
+           })
+         );
+      })
+      .finally(() => dispatch(authReducer.setLoading(false)));
+  };
+
+  const loginWithFacebook = () => {
+    signInWithPopup(auth, facebookProvider)
+      .then((response) => {
+        dispatch(authReducer.setLoading(true));
+        dispatch(
+          authReducer.setProvider({
+            type: "facebook",
+            data: response.user,
+          })
+        );
+
+        handleLogin({
+          email: "hasymbekok@gmail.com",
+          password: response.user.uid,
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          authReducer.setError({
+            status: true,
+            message: "Cannot register with this email",
+          })
+        );
+      })
+      .finally(() => dispatch(authReducer.setLoading(false)));
+  };
 
   React.useEffect(() => {
     dispatch(authReducer.removeError());
@@ -79,7 +137,7 @@ function Login() {
               <form onSubmit={formik.handleSubmit}>
                 <div class="form-floating mb-3">
                   <input
-                    type="email"
+                    // type="email"
                     class="form-control"
                     id="floatingInput"
                     placeholder="Enter your email"
@@ -116,20 +174,25 @@ function Login() {
                 </Link>
 
                 <hr class="my-4" />
-                <div class="d-grid mb-2">
-                  <button class="btn btn-google btn-login btn-lg" type="submit">
-                    Sign in with Google
-                  </button>
-                </div>
-                <div class="d-grid">
-                  <button
-                    class="btn btn-facebook btn-login btn-lg"
-                    type="submit"
-                  >
-                    Sign in with Facebook
-                  </button>
-                </div>
               </form>
+              <div class="d-grid mb-2">
+                <button
+                  class="btn btn-google btn-login btn-lg"
+                  onClick={loginWithGoogle}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : "Sign In with Google"}
+                </button>
+              </div>
+              <div class="d-grid">
+                <button
+                  class="btn btn-facebook btn-login btn-lg"
+                  onClick={loginWithFacebook}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : "Sign In with Facebook"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

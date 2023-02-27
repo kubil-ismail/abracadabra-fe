@@ -4,7 +4,8 @@ import OtpForm from "./OtpForm";
 import ProfileForm from "./ProfileForm";
 
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as authReducer from "@/stores/reducers/auth";
 
 const SwitchView = ({ type }) => {
   switch (type) {
@@ -21,6 +22,7 @@ const SwitchView = ({ type }) => {
 
 function Index() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { step } = useSelector((state) => state.auth);
 
   React.useEffect(() => {

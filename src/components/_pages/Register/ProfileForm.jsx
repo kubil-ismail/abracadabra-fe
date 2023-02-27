@@ -6,18 +6,23 @@ import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "@/stores/reducers/auth";
 
 function ProfileForm() {
-  const { error, isLoading, profile } = useSelector((state) => state.auth);
+  const { error, isLoading, profile, provider } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch();
+  const [displayName_1, displayName_2] = (
+    provider?.data?.displayName ?? ""
+  )?.split(" ");
 
   const formik = useFormik({
     initialValues: {
-      firstname: "",
-      lastname: "",
+      firstname: displayName_1,
+      lastname: displayName_2,
       username: "",
-      email: profile?.email ?? "",
-      phone_number: "",
-      password: "",
-      password_2: "",
+      email: profile?.email ?? provider?.data?.email ?? "",
+      phone_number: profile?.phone ?? provider?.data?.phoneNumber ?? "",
+      password: provider?.data?.uid ?? "",
+      password_2: provider?.data?.uid ?? "",
     },
     validationSchema: null,
     onSubmit: (values) => {
@@ -104,7 +109,7 @@ function ProfileForm() {
                 class="form-control"
                 id="floatingInputLastname"
                 placeholder="Enter your lastname"
-                value={formik.values.value}
+                value={formik.values.lastname}
                 name="lastname"
                 onChange={formik.handleChange}
               />
@@ -133,7 +138,7 @@ function ProfileForm() {
             value={formik.values.email}
             name="email"
             onChange={formik.handleChange}
-            readOnly={Boolean(profile?.email)}
+            readOnly={Boolean(profile?.email || provider?.data?.email)}
           />
           <label for="floatingInputEmail">Email Address</label>
         </div>
@@ -150,31 +155,35 @@ function ProfileForm() {
           <label for="floatingInputPhoneNumber">Phone Number</label>
         </div>
 
-        <div class="form-floating mb-3">
-          <input
-            class="form-control"
-            id="floatingInputPassword"
-            placeholder="Enter your password"
-            value={formik.values.password}
-            name="password"
-            onChange={formik.handleChange}
-            type="password"
-          />
-          <label for="floatingInputPassword">Password</label>
-        </div>
+        {!provider && (
+          <>
+            <div class="form-floating mb-3">
+              <input
+                class="form-control"
+                id="floatingInputPassword"
+                placeholder="Enter your password"
+                value={formik.values.password}
+                name="password"
+                onChange={formik.handleChange}
+                type="password"
+              />
+              <label for="floatingInputPassword">Password</label>
+            </div>
 
-        <div class="form-floating mb-3">
-          <input
-            class="form-control"
-            id="floatingInputPassword_2"
-            placeholder="Enter your password confirmation"
-            value={formik.values.password_2}
-            name="password_2"
-            onChange={formik.handleChange}
-            type="password"
-          />
-          <label for="floatingInputPassword_2">Password Confirmation</label>
-        </div>
+            <div class="form-floating mb-3">
+              <input
+                class="form-control"
+                id="floatingInputPassword_2"
+                placeholder="Enter your password confirmation"
+                value={formik.values.password_2}
+                name="password_2"
+                onChange={formik.handleChange}
+                type="password"
+              />
+              <label for="floatingInputPassword_2">Password Confirmation</label>
+            </div>
+          </>
+        )}
 
         <div class="d-grid mb-2">
           <button

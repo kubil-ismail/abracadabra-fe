@@ -7,6 +7,7 @@ const initialState = {
     login: null,
     otp: null,
   },
+  provider: null,
   isLoading: false,
   error: {
     status: false,
@@ -21,9 +22,22 @@ export const authSlice = createSlice({
     nextOtp: (state, { payload }) => {
       const { token, user } = payload?.data;
 
-      state.step = 2;
+      // check if regist with phone number
+      if (payload?.type === "phone") {
+        state.step = 3;
+        state.profile = { ...user, phone: payload?.phone };
+      } else if (payload?.type === "email" && payload?.provider === "google") {
+        state.step = 3;
+        state.profile = { ...user, email: payload?.google };
+      } else if (payload?.type === "email" && payload?.provider === "facebook") {
+        state.step = 3;
+        state.profile = { ...user, email: payload?.facebook };
+      } else {
+        state.step = 2;
+        state.profile = { ...user };
+      }
+
       state.token.login = token;
-      state.profile = user;
       state.error = initialState.error;
     },
     nextProfile: (state, { payload }) => {
@@ -64,6 +78,7 @@ export const authSlice = createSlice({
       state.step = 1;
       state.profile = initialState.profile;
       state.token = initialState.token;
+      state.provider = initialState.provider;
     },
     login: (state, { payload }) => {
       const { token, user } = payload;
@@ -71,6 +86,12 @@ export const authSlice = createSlice({
       state.profile = user;
       state.token.login = token;
       state.error = initialState.error;
+    },
+    setProvider: (state, { payload }) => {
+      state.provider = payload;
+    },
+    setStep: (state, { payload }) => {
+      state.step = payload;
     },
   },
 });
@@ -85,6 +106,8 @@ export const {
   completeProfile,
   logout,
   login,
+  setProvider,
+  setStep,
 } = authSlice.actions;
 
 export default authSlice.reducer;
