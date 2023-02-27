@@ -52,9 +52,9 @@ function Login() {
   };
 
   const loginWithGoogle = () => {
+    dispatch(authReducer.setLoading(true));
     signInWithPopup(auth, googleProvider)
       .then((response) => {
-        dispatch(authReducer.setLoading(true));
         dispatch(
           authReducer.setProvider({
             type: "google",
@@ -68,20 +68,20 @@ function Login() {
         });
       })
       .catch((error) => {
-         dispatch(
-           authReducer.setError({
-             status: true,
-             message: "Cannot register with this email",
-           })
-         );
+        dispatch(
+          authReducer.setError({
+            status: true,
+            message: "Cannot register with this email",
+          })
+        );
       })
       .finally(() => dispatch(authReducer.setLoading(false)));
   };
 
   const loginWithFacebook = () => {
+    dispatch(authReducer.setLoading(true));
     signInWithPopup(auth, facebookProvider)
       .then((response) => {
-        dispatch(authReducer.setLoading(true));
         dispatch(
           authReducer.setProvider({
             type: "facebook",
@@ -90,7 +90,7 @@ function Login() {
         );
 
         handleLogin({
-          email: "hasymbekok@gmail.com",
+          email: response.user.email,
           password: response.user.uid,
         });
       })

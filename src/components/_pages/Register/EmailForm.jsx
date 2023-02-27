@@ -56,9 +56,9 @@ function EmailForm() {
   };
 
   const registWithGoogle = () => {
+    dispatch(authReducer.setLoading(true));
     signInWithPopup(auth, googleProvider)
       .then((response) => {
-        dispatch(authReducer.setLoading(true));
         dispatch(
           authReducer.setProvider({
             type: "google",
@@ -84,9 +84,10 @@ function EmailForm() {
   };
 
   const registWithFacebook = () => {
+    dispatch(authReducer.setLoading(true));
+    
     signInWithPopup(auth, facebookProvider)
       .then((response) => {
-        dispatch(authReducer.setLoading(true));
         dispatch(
           authReducer.setProvider({
             type: "facebook",
