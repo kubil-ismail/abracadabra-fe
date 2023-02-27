@@ -145,7 +145,7 @@ function Login() {
                     name="email"
                     onChange={formik.handleChange}
                   />
-                  <label for="floatingInput">Email address</label>
+                  <label for="floatingInput">Phone number or email address</label>
                 </div>
                 <div class="form-floating mb-3">
                   <input
