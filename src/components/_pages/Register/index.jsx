@@ -3,7 +3,7 @@ import EmailForm from "./EmailForm";
 import OtpForm from "./OtpForm";
 import ProfileForm from "./ProfileForm";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import * as authReducer from "@/stores/reducers/auth";
 
@@ -27,7 +27,7 @@ function Index() {
 
   React.useEffect(() => {
     if (step === 4) {
-      router.replace("/profile");
+      router.replace(`/${router.locale}/profile`);
     }
   }, [step]);
 

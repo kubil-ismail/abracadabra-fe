@@ -1,15 +1,13 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as authReducer from "@/stores/reducers/auth";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 function Profile() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.auth);
 
-
-  console.log(profile)
   return (
     <div class="container">
       <div class="row">
@@ -35,7 +33,7 @@ function Profile() {
                   class="btn btn-lg btn-google btn-login"
                   onClick={() => {
                     dispatch(authReducer.logout());
-                    router.replace("/sign-in");
+                    router.replace(`/${router.locale}/sign-in`);
                   }}
                 >
                   Log Out

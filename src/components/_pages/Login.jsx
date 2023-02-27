@@ -3,7 +3,7 @@ import Link from "next/link";
 import http from "@/utils/http";
 
 import { useFormik } from "formik";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, facebookProvider } from "@/firebase";
@@ -182,7 +182,10 @@ function Login() {
                     {isLoading ? "Loading..." : "Sign In"}
                   </button>
                 </div>
-                <Link class="d-block text-center mt-2 small" href="/register">
+                <Link
+                  class="d-block text-center mt-2 small"
+                  href={`/${router.locale}/register`}
+                >
                   Don't have an account? Register
                 </Link>
 

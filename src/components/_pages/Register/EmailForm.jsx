@@ -3,6 +3,7 @@ import Link from "next/link";
 import http from "@/utils/http";
 
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, facebookProvider } from "@/firebase";
@@ -10,8 +11,10 @@ import * as authReducer from "@/stores/reducers/auth";
 import * as helper from "@/utils/helper";
 
 function EmailForm() {
+  const router = useRouter()
   const { error, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
 
   const formik = useFormik({
     initialValues: {
@@ -162,7 +165,10 @@ function EmailForm() {
           </button>
         </div>
 
-        <Link class="d-block text-center mt-2 small" href="/sign-in">
+        <Link
+          class="d-block text-center mt-2 small"
+          href={`/${router.locale}/sign-in`}
+        >
           Have an account? Sign In
         </Link>
 
